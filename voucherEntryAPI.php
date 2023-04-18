@@ -31,7 +31,7 @@ $arrayDataRows = array();
 
 try {
 
-$DataEntryQuery = "SELECT * FROM accounts.\"VoucherEntry\" WHERE true _vno _date _type";
+$DataEntryQuery = "SELECT * FROM accounts.\"voucherEntry\" WHERE true _vno _date _type";
 
 $DataEntryQuery = str_replace("_date",$DateAdded!=''?" and \"DateAdded\"='".$DateAdded."' ":"",$DataEntryQuery );
 
@@ -73,11 +73,5 @@ echo json_encode(['Status'=>'-1','Message'=>'Failed'],JSON_PRETTY_PRINT);
 echo json_encode(['status'=>0,'VoucherData'=>$arrayDataRows],JSON_PRETTY_PRINT);  
 
 }
-
-
-
-
-
-
 
 ?>
