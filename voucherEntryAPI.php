@@ -43,23 +43,22 @@ MISuploadlogger("Query to extract the records-----\n".$DataEntryQuery);
 
 $getDatafromData = pg_query(OpenCon(), $DataEntryQuery);
 
-$i=1;
+$dataList =  pg_fetch_assoc($getDatafromData);
+
 while ($dataList =  pg_fetch_assoc($getDatafromData)){
 
    $objDataTable = new clsDataTable();
 
-   $objDataTable->Id =$dataList['Id'];
+   $objDataTable->Id =$dataList['VID'];
    $objDataTable->VoucherDate =$dataList['VoucherDate'];
    $objDataTable->VoucherNo =$dataList['VoucherNo'];
    $objDataTable->Type =$dataList['Type'];
    $objDataTable->DateAdded =$dataList['DateAdded'];
-   $objDataTable->JsonData =$dataList['JSON'];
+   $objDataTable->JsonData =$dataList['JsonData'];
    $objDataTable->AddedBy =$dataList['AddedBy'];
    $objDataTable->Note =$dataList['Note'];
    
    $a = array_push($arrayDataRows,$objDataTable);
-
-   $i++;
 
 }  
 
@@ -73,5 +72,11 @@ echo json_encode(['Status'=>'-1','Message'=>'Failed'],JSON_PRETTY_PRINT);
 echo json_encode(['status'=>0,'VoucherData'=>$arrayDataRows],JSON_PRETTY_PRINT);  
 
 }
+
+
+
+
+
+
 
 ?>
