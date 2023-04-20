@@ -43,8 +43,6 @@ MISuploadlogger("Query to extract the records-----\n".$DataEntryQuery);
 
 $getDatafromData = pg_query(OpenCon(), $DataEntryQuery);
 
-$dataList =  pg_fetch_assoc($getDatafromData);
-
 while ($dataList =  pg_fetch_assoc($getDatafromData)){
 
    $objDataTable = new clsDataTable();

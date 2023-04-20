@@ -33,7 +33,7 @@ $arrayDataRows = array();
 
 try {
 
-$DataEntryQuery = "SELECT * FROM accounts.\"ledgerMaster\" WHERE true _vno _date _type";
+$DataEntryQuery = "SELECT * FROM accounts.\"ledgerMaster\" WHERE true _vno _date _type ORDER BY \"Id\" ASC ";
 
 $DataEntryQuery = str_replace("_date",$DateAdded!=''?" and \"DateAdded\"='".$DateAdded."' ":"",$DataEntryQuery );
 
@@ -45,10 +45,7 @@ MISuploadlogger("Query to extract the records-----\n".$DataEntryQuery);
 
 $getDatafromData = pg_query(OpenCon(), $DataEntryQuery);
 
-$dataList =  pg_fetch_assoc($getDatafromData);
-
 while ($dataList =  pg_fetch_assoc($getDatafromData)){
-
    $objDataTable = new clsDataTable();
 
    $objDataTable->Id =$dataList['Id'];
