@@ -15,19 +15,26 @@ $OpeningBal=trim($dataToShare->OpeningBalance);
 $AddedBy=trim($dataToShare->AddedBy);
 $Status=trim($dataToShare->Status);
 
+include "Validation/accountName.php";
+
+
 class clsListData
 {
   public $Status;
-	public $Message;
+  public $Message;
+  public $Remark;
 	
 }
 
 $listArray=array();
 $Message = "";
 $Status = 0;
+
 try
 {
 
+if($IsCorrect){
+    
   if($Id!=''){
     $listSql = "SELECT \"ACCOUNT_ID\" FROM accounts.\"accountMaster\" where \"ACCOUNT_ID\"='_aid'";
     $listSql = str_replace("_aid",$Id,$listSql );
@@ -86,15 +93,17 @@ try
     }
   }
  
-
+}
   $objListData = new clsListData();
 	$objListData->Status = "0";
 	$objListData->Message= $Message;
+		$objListData->Remark= $ValidationJsonString;
 
 
 	echo json_encode($objListData,JSON_PRETTY_PRINT);
 
 }
+
 
 catch(Exception $e)
 {
