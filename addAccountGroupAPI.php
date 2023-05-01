@@ -14,11 +14,14 @@ $GroupName=strtoupper(trim($dataToShare->GroupName));
 $Id=trim($dataToShare->Id);
 $AddedBy=trim($dataToShare->AddedBy);
 
+include "Validation/groupName.php";
+
 class clsListData
 {
   public $Status;
-	public $Message;
-	
+  public $Message;
+  public $Remark;
+  
 }
 
 $listArray=array();
@@ -27,18 +30,20 @@ $Status = 0;
 try
 {
 
+  if($IsCorrect){
+
   if($Id!=''){
 
     $listSql = "SELECT \"GROUP_ID\" FROM accounts.\"accountGroupMaster\" where true _gid";
-	  $listSql = str_replace("_gid", $Id!=''?" and \"GROUP_ID\"=".$Id." ":"",$listSql );
+    $listSql = str_replace("_gid", $Id!=''?" and \"GROUP_ID\"=".$Id." ":"",$listSql );
 
     // $listSql = str_replace("_gname",$GroupName!=''?" and UPPER(\"GROUP_NAME\") LIKE '%".$GroupName."%' ":"",$listSql );
 
-    MISuploadlogger($listSql);	
+    MISuploadlogger($listSql);  
     $DataQuery = pg_query(OpenCon(), $listSql);
     
     $Count = pg_num_rows($DataQuery);
-	
+  
     if($Count > 0){
 
       $updateDetailQuery =" Update accounts.\"accountGroupMaster\" set \"REPORT_ID\" = '_rid',\"GROUP_NAME\"='_gname',\"SIDE\"='_side' where true _gid;";
@@ -61,9 +66,9 @@ try
 
   }else{
     $lastIdQuery = "SELECT \"GROUP_ID\" FROM accounts.\"accountGroupMaster\" ORDER BY \"GROUP_ID\" DESC";
-  	MISuploadlogger($lastIdQuery);
+    MISuploadlogger($lastIdQuery);
     $DataQuery = pg_query(OpenCon(), $lastIdQuery);
-	
+  
     $LastId = pg_fetch_assoc($DataQuery);
     $TablelastId = $LastId['GROUP_ID']+1;
 
@@ -72,31 +77,34 @@ try
     $sql_val = "'".$GroupName."','".date("Y-m-d h:i:s",time())."','".$ReportId."','".$Side."','".$TablelastId."','".$AddedBy."'";
 
     $InsertQuery ='Insert into accounts."accountGroupMaster" ('.$sql_name.') Values ('.$sql_val.');';
+    
+        MISuploadlogger($InsertQuery);  
 
     $result = pg_query(OpenCon(),$InsertQuery);
     $effectiveRow = pg_affected_rows($result);
 
     if($effectiveRow > 0){
-    	$Message = "Added Successfully";
+      $Message = "Added Successfully";
     }else{
-    	$Message = "Not Added";
+      $Message = "Not Added";
     }
   }
 
-	
+}  
 
   $objListData = new clsListData();
-	$objListData->Status = "0";
-	$objListData->Message= $Message;
+  $objListData->Status = "0";
+  $objListData->Message= $Message;
+  $objListData->Remark= $ValidationJsonString;
 
 
-	echo json_encode($objListData,JSON_PRETTY_PRINT);
+  echo json_encode($objListData,JSON_PRETTY_PRINT);
 
 }
 
 catch(Exception $e)
 {
-	echo json_encode(['Status'=>'-1','Message'=>'Failed'],JSON_PRETTY_PRINT);
+  echo json_encode(['Status'=>'-1','Message'=>'Failed'],JSON_PRETTY_PRINT);
 }
 
 ?>
